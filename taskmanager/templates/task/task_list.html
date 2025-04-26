@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>タスク一覧</title>
+</head>
+<body>
+<h1>タスク管理アプリ</h1>
+    <h2>新規タスク作成</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="新しいタスクを入力" required><br><br>
+        <label for="date">日付：</label>
+        <input type="date" name="date" required><br><br>
+        <textarea name="description" placeholder="タスクの説明を入力" rows="4" cols="40"></textarea><br><br>
+        <label>タスクタイプ：</label>
+        <input type="radio" id="dairy" name="task_type" value="daily">
+        <label for="dairy">毎日</label>
+        <input type="radio" id="once" name="task_type" value="once" checked>
+        <label for="once">１回きり</label>
+        <button type="submit">追加</button>
+    </form>
+
+    <hr>
+    <form method="post" action="{% url 'start_of_day' %}">
+        {% csrf_token %}
+        <button type="submit">業務開始</button>
+    </form>
+
+<h2>業務終了</h2>
+<form method="POST" action="{% url 'end_of_day' %}">
+    {% csrf_token %}
+    <button type="submit">業務終了</button>
+</form>
+
+    <hr>
+<h2>タスク一覧</h2>
+    <h3>本日の未完了タスク</h3>
+    <ul>
+        {% for task in incomplete_tasks %}
+            <li>
+                <span>{{ task.id }}</span>
+                <span>{{ task.title }}</span>
+                <span>{{ task.description }}</span>
+                <span>{{ task.date }}</span>
+                <a href="{% url 'task_edit' task.id %}">Edit</a>
+                <a href="{% url 'task_delete' task.id %}">Delete</a>
+                <form method="POST" action="{% url 'task_complete' task.id %}">
+                    {% csrf_token %}
+                    <button type="submit">完了</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>
+                本日の未完了タスクはありません
+            </li>
+        {% endfor %}
+    </ul> 
+        <br>
+    <h3>本日の完了タスク</h3>
+    <ul>
+        {% for task in completed_today_tasks %}
+            <li>
+                <span>{{ task.id }}</span>
+                <span>{{ task.title }}</span>
+                <span>{{ task.description }}</span>
+                <a href="{% url 'task_edit' task.id %}">Edit</a>
+                <a href="{% url 'task_delete' task.id %}">Delete</a>
+            </li>
+        {% empty %}
+            <li>今日完了したタスクはありません</li>
+        {% endfor %}
+    </ul>
+
+    <h3>未来のタスク</h3>
+    <ul>
+        {% for task in future_tasks %}
+            <li>
+                <span>{{ task.id }}</span>
+                {{ task.title }} - {{ task.description }} - {{ task.date }}
+                <a href="{% url 'task_edit' task.id %}">Edit</a>
+                <a href="{% url 'task_delete' task.id %}">Delete</a>
+            </li>
+
+        {% endfor %}
+    </ul>
+    
+
+    <h3>毎日のタスク一覧</h3>
+    <ul>
+        {% for task in template_tasks %}
+            <li>
+                <span>{{ task.id }}</span>
+                <span>{{ task.title }}</span>
+                <span>{{ task.description }}</span>
+                <a href="{% url 'template_task_edit' task.id %}">Edit</a>
+                <a href="{% url 'template_task_delete' task.id %}">Delete</a>
+            </li>
+        {% empty %}
+            <li>定型タスクはありません</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
