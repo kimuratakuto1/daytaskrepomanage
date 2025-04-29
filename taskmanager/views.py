@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Task, TaskTemplate
 from django.utils import timezone
 from django.utils.timezone import now
+import os
+import requests
+from django.conf import settings
 
 
 #タスク追加

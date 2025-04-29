@@ -1,3 +1,10 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
 {% csrf_token %}
 <h2>日報</h2>
 今日は
@@ -6,3 +13,5 @@
 {% empty %}
 <p>今日完了したタスクはありません</p>
 {% endfor %}
+</body>
+</html>
