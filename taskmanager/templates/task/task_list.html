@@ -1,7 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>タスク一覧</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
 <h1>タスク管理アプリ</h1>
@@ -33,71 +35,81 @@
 </form>
 
     <hr>
-<h2>タスク一覧</h2>
+<!-- 本日の未完了タスク -->
+<div class="task-list">
     <h3>本日の未完了タスク</h3>
     <ul>
         {% for task in incomplete_tasks %}
             <li>
-                <span>{{ task.id }}</span>
-                <span>{{ task.title }}</span>
-                <span>{{ task.description }}</span>
-                <span>{{ task.date }}</span>
-                <a href="{% url 'task_edit' task.id %}">Edit</a>
-                <a href="{% url 'task_delete' task.id %}">Delete</a>
-                <form method="POST" action="{% url 'task_complete' task.id %}">
-                    {% csrf_token %}
-                    <button type="submit">完了</button>
-                </form>
+                <span>{{ task.title }}</span> - <span>{{ task.description }}</span> - <span>{{ task.date }}</span>
+                <div class="task-actions">
+                    <a href="{% url 'task_edit' task.id %}">編集</a>
+                    <a href="{% url 'task_delete' task.id %}">削除</a>
+                    <form method="POST" action="{% url 'task_complete' task.id %}">
+                        {% csrf_token %}
+                        <button type="submit">完了</button>
+                    </form>
+                </div>
             </li>
         {% empty %}
-            <li>
-                本日の未完了タスクはありません
-            </li>
+            <li class="no-tasks-message">本日の未完了タスクはありません</li>
         {% endfor %}
-    </ul> 
-        <br>
+    </ul>
+</div>
+
+<!-- 本日の完了タスク -->
+<div class="task-list">
     <h3>本日の完了タスク</h3>
     <ul>
         {% for task in completed_today_tasks %}
             <li>
-                <span>{{ task.id }}</span>
-                <span>{{ task.title }}</span>
-                <span>{{ task.description }}</span>
-                <a href="{% url 'task_edit' task.id %}">Edit</a>
-                <a href="{% url 'task_delete' task.id %}">Delete</a>
+                <span>{{ task.title }}</span> - <span>{{ task.description }}</span>
+                <div class="task-actions">
+                    <a href="{% url 'task_edit' task.id %}">編集</a>
+                    <a href="{% url 'task_delete' task.id %}">削除</a>
+                </div>
             </li>
         {% empty %}
-            <li>今日完了したタスクはありません</li>
+            <li class="no-tasks-message">今日完了したタスクはありません</li>
         {% endfor %}
     </ul>
+</div>
 
+<!-- 未来のタスク -->
+<div class="task-list">
     <h3>未来のタスク</h3>
     <ul>
         {% for task in future_tasks %}
             <li>
-                <span>{{ task.id }}</span>
-                {{ task.title }} - {{ task.description }} - {{ task.date }}
-                <a href="{% url 'task_edit' task.id %}">Edit</a>
-                <a href="{% url 'task_delete' task.id %}">Delete</a>
+                <span>{{ task.title }}</span> - <span>{{ task.description }}</span> - <span>{{ task.date }}</span>
+                <div class="task-actions">
+                    <a href="{% url 'task_edit' task.id %}">編集</a>
+                    <a href="{% url 'task_delete' task.id %}">削除</a>
+                </div>
             </li>
-
+        {% empty %}
+            <li class="no-tasks-message">未来のタスクはありません</li>
         {% endfor %}
     </ul>
-    
+</div>
 
+<!-- 毎日のタスク -->
+<div class="task-list">
     <h3>毎日のタスク一覧</h3>
     <ul>
         {% for task in template_tasks %}
             <li>
-                <span>{{ task.id }}</span>
-                <span>{{ task.title }}</span>
-                <span>{{ task.description }}</span>
-                <a href="{% url 'template_task_edit' task.id %}">Edit</a>
-                <a href="{% url 'template_task_delete' task.id %}">Delete</a>
+                <span>{{ task.title }}</span> - <span>{{ task.description }}</span>
+                <div class="task-actions">
+                    <a href="{% url 'template_task_edit' task.id %}">編集</a>
+                    <a href="{% url 'template_task_delete' task.id %}">削除</a>
+                </div>
             </li>
         {% empty %}
-            <li>定型タスクはありません</li>
+            <li class="no-tasks-message">定型タスクはありません</li>
         {% endfor %}
     </ul>
+</div>
+
 </body>
 </html>

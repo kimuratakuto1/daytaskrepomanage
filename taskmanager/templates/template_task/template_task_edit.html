@@ -1,7 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
 <form method="post">
     {% csrf_token %}
-    <label for="title">Title:</label>
+    <label for="title">タイトル</label>
     <input type="text" name="title" value="{{ task.title }}">
     <textarea name="description">{{ task.description }}</textarea>
-    <button type="submit">Save</button>
+    <button type="submit">保存</button>
 </form>
+</body>
+</html>
