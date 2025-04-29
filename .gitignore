@@ -22,4 +22,12 @@ ENV/
 .idea/
 .vscode/
 
+# Environment variables
 .env
+
+# macOS system files
+.DS_Store
+
+# Django static files (build artifacts)
+static/
+staticfiles/
