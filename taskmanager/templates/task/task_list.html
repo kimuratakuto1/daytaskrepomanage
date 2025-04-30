@@ -25,17 +25,16 @@
     </form>
 
     <hr>
+    <div class="work-buttons">
     <form method="post" action="{% url 'start_of_day' %}">
         {% csrf_token %}
         <button type="submit">業務開始</button>
     </form>
-<div class="heading-wrapper">
-<h2>業務終了</h2>
-</div>
-<form method="POST" action="{% url 'end_of_day' %}">
-    {% csrf_token %}
-    <button type="submit">業務終了</button>
-</form>
+    <form method="POST" action="{% url 'end_of_day' %}">
+        {% csrf_token %}
+        <button type="submit">業務終了</button>
+    </form>
+    </div>
 
     <hr>
 <!-- 本日の未完了タスク -->
