@@ -7,7 +7,9 @@
 </head>
 <body>
 <h1>タスク管理アプリ</h1>
+    <div class="heading-wrapper">
     <h2>新規タスク作成</h2>
+    </div>
     <form method="post">
         {% csrf_token %}
         <input type="text" name="title" placeholder="新しいタスクを入力" required><br><br>
@@ -27,8 +29,9 @@
         {% csrf_token %}
         <button type="submit">業務開始</button>
     </form>
-
+<div class="heading-wrapper">
 <h2>業務終了</h2>
+</div>
 <form method="POST" action="{% url 'end_of_day' %}">
     {% csrf_token %}
     <button type="submit">業務終了</button>
@@ -37,7 +40,9 @@
     <hr>
 <!-- 本日の未完了タスク -->
 <div class="task-list">
+    <div class="heading-wrapper">
     <h3>本日の未完了タスク</h3>
+    </div>
     <ul>
         {% for task in incomplete_tasks %}
             <li>
@@ -59,7 +64,9 @@
 
 <!-- 本日の完了タスク -->
 <div class="task-list">
+    <div class="heading-wrapper">
     <h3>本日の完了タスク</h3>
+    </div>
     <ul>
         {% for task in completed_today_tasks %}
             <li>
@@ -77,7 +84,9 @@
 
 <!-- 未来のタスク -->
 <div class="task-list">
+    <div class="heading-wrapper">
     <h3>未来のタスク</h3>
+    </div>
     <ul>
         {% for task in future_tasks %}
             <li>
@@ -95,7 +104,9 @@
 
 <!-- 毎日のタスク -->
 <div class="task-list">
+    <div class="heading-wrapper">
     <h3>毎日のタスク一覧</h3>
+    </div>
     <ul>
         {% for task in template_tasks %}
             <li>
