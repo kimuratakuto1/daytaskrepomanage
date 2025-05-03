@@ -5,6 +5,8 @@ from django.utils.timezone import now
 import os
 import requests
 from django.conf import settings
+import openai
+from django.http import HttpResponse
 
 
 #タスク追加
@@ -126,5 +128,24 @@ def end_of_day(request):
     if request.method == 'POST':
         today = timezone.now().date()
         completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
-        report = "\n".join([task.title for task in completed_tasks])
+        if not completed_tasks.exists():
+            return render(request, 'report/end_of_day_report.html', {'report': '本日は完了したタスクがありません。'})
+        task_summaries = [
+            f"- {task.title}： {task.description or '説明なし'}"
+            for task in completed_tasks
+        ]
+        prompt = ("以下のタスクをもとに、今日の業務日報を日本語で作成してください。\n\n"
+        + "\n".join(task_summaries)
+        )
+
+        try:
+            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}],
+            )
+            report = response.choices[0].message.content
+        except Exception as e:
+            print(f"Error generating report: {e}")
+            report = "日報作成中に問題が発生しました"
         return render(request, 'report/end_of_day_report.html', {'report': report})
