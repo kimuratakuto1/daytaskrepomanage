@@ -7,9 +7,9 @@
 <body>
 {% csrf_token %}
 <h2>日報</h2>
-今日は
+<p>{{ today }}の日報</p>
 {% for sent in report.splitlines %}
-<p>{{ sent }}をしました</p>
+<p>{{ sent }}</p>
 {% empty %}
 <p>今日完了したタスクはありません</p>
 {% endfor %}

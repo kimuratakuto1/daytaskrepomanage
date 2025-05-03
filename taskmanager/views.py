@@ -134,8 +134,9 @@ def end_of_day(request):
             f"- {task.title}： {task.description or '説明なし'}"
             for task in completed_tasks
         ]
-        prompt = ("以下のタスクをもとに、今日の業務日報を日本語で作成してください。\n\n"
+        prompt = ("今日行った業務について、以下のタスクをもとに日本語で業務日報を作成してください。内容は簡潔で、業務の進捗や成果を強調し、最終的な成果や次のステップを示唆してください。\n\n"
         + "\n".join(task_summaries)
+        + "日報は業務を振り返る形で記述してください。例えば、タスクの進捗状況や課題、今後の対応予定について記載してください。"
         )
 
         try:
