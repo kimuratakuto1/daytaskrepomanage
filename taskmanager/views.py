@@ -127,6 +127,7 @@ def start_of_day(request):
 def end_of_day(request):
     if request.method == 'POST':
         today = timezone.now().date()
+        formatted_today = today.strftime("%Y年%m月%d日")
         completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
         if not completed_tasks.exists():
             return render(request, 'report/end_of_day_report.html', {'report': '本日は完了したタスクがありません。'})
@@ -149,4 +150,4 @@ def end_of_day(request):
         except Exception as e:
             print(f"Error generating report: {e}")
             report = "日報作成中に問題が発生しました"
-        return render(request, 'report/end_of_day_report.html', {'report': report})
+        return render(request, 'report/end_of_day_report.html', {'report': report, 'today': formatted_today})
