@@ -8,10 +8,15 @@
 {% csrf_token %}
 <h2>日報</h2>
 <p>{{ today }}の日報</p>
-{% for sent in report.splitlines %}
-<p>{{ sent }}</p>
-{% empty %}
+{% if report %}
+<form method="POST">
+    {% csrf_token %}
+    <h2>日報編集</h2>
+    <textarea name="edited_report" rows="10" cols="50">{{ report }}</textarea><br>
+    <button type="submit">保存</button>
+</form>
+{% else %}
 <p>今日完了したタスクはありません</p>
-{% endfor %}
+{% endif %}
 </body>
 </html>
