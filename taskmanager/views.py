@@ -125,9 +125,13 @@ def start_of_day(request):
 
 # 業務終了
 def end_of_day(request):
+    today = timezone.now().date()
+    formatted_today = today.strftime("%Y年%m月%d日")
     if request.method == 'POST':
-        today = timezone.now().date()
-        formatted_today = today.strftime("%Y年%m月%d日")
+        edited_report = request.POST.get('edited_report')
+        if edited_report:
+            return render(request, 'report/end_of_day_report.html', {'report': edited_report, 'today': formatted_today})
+
         completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
         if not completed_tasks.exists():
             return render(request, 'report/end_of_day_report.html', {'report': '本日は完了したタスクがありません。'})
