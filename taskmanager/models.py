@@ -19,3 +19,12 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.date}"
+    
+class Report(models.Model):
+    date = models.DateField()
+    content = models.TextField
+    is_locked = models.BooleanField(default=False)
+    title = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.date}の日報"
