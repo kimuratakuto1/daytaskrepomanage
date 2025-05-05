@@ -7,6 +7,8 @@ import requests
 from django.conf import settings
 import openai
 from django.http import HttpResponse
+from .forms import ReportForm
+from .models import Report
 
 
 #タスク追加
@@ -127,10 +129,13 @@ def start_of_day(request):
 def end_of_day(request):
     today = timezone.now().date()
     formatted_today = today.strftime("%Y年%m月%d日")
+
     if request.method == 'POST':
         edited_report = request.POST.get('edited_report')
+        title = request.POST.get('title')
         if edited_report:
-            return render(request, 'report/end_of_day_report.html', {'report': edited_report, 'today': formatted_today})
+            report = Report.objects.create(content=edited_report,date=today,title=title)
+            return redirect('report_list')
 
         completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
         if not completed_tasks.exists():
@@ -155,3 +160,19 @@ def end_of_day(request):
             print(f"Error generating report: {e}")
             report = "日報作成中に問題が発生しました"
         return render(request, 'report/end_of_day_report.html', {'report': report, 'today': formatted_today})
+    
+def create_report(request):
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.save()
+            return redirect('report_list')
+    else:
+        form = ReportForm()
+    return render(request, 'report/create_report.html', {'form': form})
+        
+
+def report_list(request):
+    reports = Report.objects.all().order_by('date')
+    return render(request, 'report/report_list.html', {'reports': reports})

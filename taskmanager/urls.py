@@ -10,4 +10,6 @@ urlpatterns = [
     path('start_of_day/',views.start_of_day, name='start_of_day'),
     path('template_task_edit/<int:task_id>/',views.template_task_edit, name='template_task_edit'),
     path('template_task_delete/<int:task_id>/',views.template_task_delete, name='template_task_delete'),
+    path('report/create/', views.create_report, name='create_report'),
+    path('report/list/', views.report_list, name='report_list'),
 ]
