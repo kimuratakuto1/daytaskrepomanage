@@ -22,7 +22,7 @@ class Task(models.Model):
     
 class Report(models.Model):
     date = models.DateField()
-    content = models.TextField
+    content = models.TextField(default='名無しのタイトル')
     is_locked = models.BooleanField(default=False)
     title = models.CharField(max_length=100)
 
