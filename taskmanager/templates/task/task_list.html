@@ -121,5 +121,12 @@
     </ul>
 </div>
 
+
+<div class="centered-button-container">
+    <form method="post" action="{% url 'report_list' %}" class="report-button-form">
+        {% csrf_token %}
+        <button type="submit">日報一覧ページへ</button>
+    </form>
+</div>
 </body>
 </html>
