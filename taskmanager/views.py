@@ -176,3 +176,10 @@ def create_report(request):
 def report_list(request):
     reports = Report.objects.all().order_by('date')
     return render(request, 'report/report_list.html', {'reports': reports})
+
+def report_delete(request, report_id):
+    report = get_object_or_404(Report, pk = report_id)
+    if request.method == 'POST':
+        report.delete()
+        return redirect('report_list')
+    return render(request, 'report/report_delete.html',{'report': report})
