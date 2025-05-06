@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    <label for="title">タイトル:</label>
+    <input type="text" name="title" value="{{ report.title }}" required><br>
+    <label for="date">日付：</label>
+    <input type="date" name="date" value="{{ report.date|date:'Y-m-d' }}" required><br>
+    <label>詳細：</label><br>
+    <textarea name="content" required>{{ report.content }}</textarea>
+    <button type="submit">保存</button>
+</form>
+</body>
+</html>

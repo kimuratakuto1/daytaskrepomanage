@@ -9,6 +9,7 @@ import openai
 from django.http import HttpResponse
 from .forms import ReportForm
 from .models import Report
+from django.contrib import messages
 
 
 #タスク追加
@@ -183,3 +184,28 @@ def report_delete(request, report_id):
         report.delete()
         return redirect('report_list')
     return render(request, 'report/report_delete.html',{'report': report})
+
+def report_edit(request, report_id):
+    report = get_object_or_404(Report, pk=report_id)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        date = request.POST.get('date')
+
+        #必須項目のバリデーション
+        if not title or  not content or not date:
+            error = "すべての項目を入力してください。"
+            return render(request, 'report/report_edit.html', {
+                'report': report,
+                'error': error,
+                'title': title,
+                'content': content,
+                'date': date
+            })
+        #データ更新
+        report.title = title
+        report.content = content
+        report.date = date
+        report.save()
+        return redirect('report_list')
+    return render(request, 'report/report_edit.html', {'report': report})

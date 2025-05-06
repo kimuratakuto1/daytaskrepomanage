@@ -12,5 +12,6 @@ urlpatterns = [
     path('template_task_delete/<int:task_id>/',views.template_task_delete, name='template_task_delete'),
     path('report/create/', views.create_report, name='create_report'),
     path('report/list/', views.report_list, name='report_list'),
-    path('report/delete/<int:report_id>',views.report_delete, name='report_delete'),
+    path('report/delete/<int:report_id>', views.report_delete, name='report_delete'),
+    path('report/edit/<int:report_id>', views.report_edit, name='report_edit'),
 ]
