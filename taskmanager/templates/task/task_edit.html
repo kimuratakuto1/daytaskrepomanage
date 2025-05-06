@@ -8,9 +8,9 @@
 <form method="post">
     {% csrf_token %}
     <label for="title">タイトル:</label>
-    <input type="text" name="title" value="{{ task.title }}"><br>
+    <input type="text" name="title" value="{{ task.title }}" required><br>
     <label for="date">日付：</label>
-    <input type="date" name="date"><br>
+    <input type="date" name="date" value="{{ task.date|date:'Y-m-d'}}" required><br>
     <label>詳細：</label><br>
     <textarea name="description">{{ task.description }}</textarea>
     <button type="submit">保存</button>
