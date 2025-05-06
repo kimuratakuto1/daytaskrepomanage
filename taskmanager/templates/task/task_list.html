@@ -14,7 +14,7 @@
         {% csrf_token %}
         <input type="text" name="title" placeholder="新しいタスクを入力" required><br><br>
         <label for="date">日付：</label>
-        <input type="date" name="date" required><br><br>
+        <input type="date" name="date" value="{{ today|date:'Y-m-d' }}"><br><br>
         <textarea name="description" placeholder="タスクの説明を入力" rows="4" cols="40"></textarea><br><br>
         <label>タスクタイプ：</label>
         <input type="radio" id="dairy" name="task_type" value="daily">
