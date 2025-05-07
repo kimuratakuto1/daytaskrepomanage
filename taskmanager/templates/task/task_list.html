@@ -30,7 +30,7 @@
         {% csrf_token %}
         <button type="submit">業務開始</button>
     </form>
-    <form method="POST" action="{% url 'end_of_day' %}">
+    <form method="POST" action="{% url 'report_create' %}">
         {% csrf_token %}
         <button type="submit">業務終了</button>
     </form>

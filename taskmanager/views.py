@@ -127,7 +127,7 @@ def start_of_day(request):
 
 
 # 業務終了
-def end_of_day(request):
+def report_create(request):
     today = timezone.now().date()
     formatted_today = today.strftime("%Y年%m月%d日")
 
@@ -135,15 +135,15 @@ def end_of_day(request):
         edited_report = request.POST.get('edited_report')
         title         = request.POST.get('title')
 
-        #日報編集時のポスト(report_edit.htmlから)
+        #日報編集時のポスト(report_create.htmlから)
         if edited_report:
             report = Report.objects.create(content=edited_report,date=today,title=title)
             return redirect('report_list')
         
-        #日報生成時のポスト(end_of_day_report.htmlから)
+        #日報生成時のポスト(task-list.htmlから)
         completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
         if not completed_tasks.exists(): #例外処理
-            return render(request, 'report/end_of_day_report.html', {'report': '本日は完了したタスクがありません。'})
+            return render(request, 'report/report_create.html', {'report': '本日は完了したタスクがありません。'})
 
         #日報の自動生成
         task_summaries = [
@@ -165,18 +165,8 @@ def end_of_day(request):
         except Exception as e:
             print(f"Error generating report: {e}")
             report = "日報作成中に問題が発生しました"
-        return render(request, 'report/end_of_day_report.html', {'report': report, 'today': formatted_today})
+        return render(request, 'report/report_create.html', {'report': report, 'today': formatted_today})
     
-def create_report(request):
-    if request.method == 'POST':
-        form = ReportForm(request.POST)
-        if form.is_valid():
-            report = form.save(commit=False)
-            report.save()
-            return redirect('report_list')
-    else:
-        form = ReportForm()
-    return render(request, 'report/create_report.html', {'form': form})
         
 #日報リスト
 def report_list(request):
