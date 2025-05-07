@@ -15,10 +15,10 @@ from django.contrib import messages
 #タスク追加
 def task_list(request):
     if request.method == "POST":
-        title = request.POST.get("title")
+        title       = request.POST.get("title")
         description = request.POST.get("description")
-        date = request.POST.get("date")
-        task_type = request.POST.get("task_type")
+        date        = request.POST.get("date")
+        task_type   = request.POST.get("task_type")
         if title:
             if task_type == "daily":
                 TaskTemplate.objects.create(title=title, description=description, is_daily=True)
@@ -31,11 +31,11 @@ def task_list(request):
     template_tasks = TaskTemplate.objects.all()
     future_tasks = Task.objects.filter(date__gt=timezone.now().date(), template__isnull=True).order_by('date')
     return render(request, 'task/task_list.html', {
-        'incomplete_tasks': incomplete_tasks,
+        'incomplete_tasks'     : incomplete_tasks,
         'completed_today_tasks': completed_today_tasks,
-        'today': today,
-        'template_tasks': template_tasks,
-        'future_tasks': future_tasks,
+        'today'                : today,
+        'template_tasks'       : template_tasks,
+        'future_tasks'         : future_tasks,
     })
 
 
@@ -43,9 +43,9 @@ def task_list(request):
 def task_edit(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     if request.method == 'POST':
-        task.title = request.POST.get('title')
+        task.title       = request.POST.get('title')
         task.description = request.POST.get('description')
-        task.date = request.POST.get('date')
+        task.date        = request.POST.get('date')
         task.save()
         return redirect('/')
     
@@ -55,7 +55,7 @@ def task_edit(request, task_id):
 def template_task_edit(request, task_id):
     task = get_object_or_404(TaskTemplate, pk=task_id)
     if request.method == 'POST':
-        task.title = request.POST.get('title')
+        task.title       = request.POST.get('title')
         task.description = request.POST.get('description')
         task.save()
         return redirect('/')
@@ -106,17 +106,17 @@ def start_of_day(request):
             
             # 既存のタスクがあるかどうか確認
             existing_task = Task.objects.filter(
-                title=template.title,
-                description=template.description,
-                date=today
+                title       = template.title,
+                description = template.description,
+                date        = today
             ).exists()
             
             if not existing_task:
                 print(f"Creating task: Title: {template.title}, Description: {template.description}, Date: {today}")
                 Task.objects.create(
-                    title=template.title,
-                    description=template.description,
-                    date=today
+                    title       = template.title,
+                    description = template.description,
+                    date        = today
                 )
             else:
                 print(f"Task already exists for: {template.title}, {template.description}")
@@ -133,14 +133,19 @@ def end_of_day(request):
 
     if request.method == 'POST':
         edited_report = request.POST.get('edited_report')
-        title = request.POST.get('title')
+        title         = request.POST.get('title')
+
+        #日報編集時のポスト(report_edit.htmlから)
         if edited_report:
             report = Report.objects.create(content=edited_report,date=today,title=title)
             return redirect('report_list')
-
+        
+        #日報生成時のポスト(end_of_day_report.htmlから)
         completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
-        if not completed_tasks.exists():
+        if not completed_tasks.exists(): #例外処理
             return render(request, 'report/end_of_day_report.html', {'report': '本日は完了したタスクがありません。'})
+
+        #日報の自動生成
         task_summaries = [
             f"- {task.title}： {task.description or '説明なし'}"
             for task in completed_tasks
@@ -173,11 +178,12 @@ def create_report(request):
         form = ReportForm()
     return render(request, 'report/create_report.html', {'form': form})
         
-
+#日報リスト
 def report_list(request):
     reports = Report.objects.all().order_by('date')
     return render(request, 'report/report_list.html', {'reports': reports})
 
+#日報削除
 def report_delete(request, report_id):
     report = get_object_or_404(Report, pk = report_id)
     if request.method == 'POST':
@@ -185,27 +191,28 @@ def report_delete(request, report_id):
         return redirect('report_list')
     return render(request, 'report/report_delete.html',{'report': report})
 
+#日報編集
 def report_edit(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
-        title = request.POST.get('title')
+        title   = request.POST.get('title')
         content = request.POST.get('content')
-        date = request.POST.get('date')
+        date    = request.POST.get('date')
 
         #必須項目のバリデーション
         if not title or  not content or not date:
             error = "すべての項目を入力してください。"
             return render(request, 'report/report_edit.html', {
-                'report': report,
-                'error': error,
-                'title': title,
+                'report' : report,
+                'error'  : error,
+                'title'  : title,
                 'content': content,
-                'date': date
+                'date'   : date
             })
         #データ更新
-        report.title = title
+        report.title   = title
         report.content = content
-        report.date = date
+        report.date    = date
         report.save()
         return redirect('report_list')
     return render(request, 'report/report_edit.html', {'report': report})
