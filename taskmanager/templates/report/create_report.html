@@ -1,8 +1,0 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<h2>日報の作成</h2>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">保存</button>
-</form>
