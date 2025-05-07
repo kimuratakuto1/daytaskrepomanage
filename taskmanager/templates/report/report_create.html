@@ -12,8 +12,9 @@
 <form method="POST">
     {% csrf_token %}
     <h2>日報編集</h2>
+    <br>
     <label for="title">タイトル:</label>
-    <input type="text" name="title" value="タイトル"><br>
+    <input type="text" name="title" value=""><br>
     <textarea name="edited_report" rows="10" cols="50">{{ report }}</textarea><br>
     <button type="submit">保存</button>
 </form>
