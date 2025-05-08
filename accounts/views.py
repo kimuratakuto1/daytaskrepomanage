@@ -8,11 +8,13 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             # 新しいユーザーを作成
-            user = form.save()
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
             # ユーザーをログイン状態にする
             login(request, user)
             # ホームページやユーザーのダッシュボードへリダイレクト
-            return redirect('home')  # homeはリダイレクト先のURL名（適宜変更）
+            return redirect('login')  # homeはリダイレクト先のURL名（適宜変更）
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})

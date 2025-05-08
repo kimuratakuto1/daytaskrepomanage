@@ -10,9 +10,11 @@ from django.http import HttpResponse
 from .forms import ReportForm
 from .models import Report
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 #タスク追加
+@login_required
 def task_list(request):
     if request.method == "POST":
         title       = request.POST.get("title")
