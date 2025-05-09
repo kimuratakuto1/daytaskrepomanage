@@ -1,9 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-<link href="{% static 'css/style.css' %}" rel="stylesheet">
-</head>
+{% block title %} 定型タスク編集 {% endblock %}
+{% block content %}
 <body>
 <form method="post">
     {% csrf_token %}
@@ -13,5 +11,4 @@
     <textarea name="description">{{ task.description }}</textarea>
     <button type="submit">保存</button>
 </form>
-</body>
-</html>
+{% endblock %}

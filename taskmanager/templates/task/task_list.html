@@ -1,12 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>タスク一覧</title>
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-</head>
-<body>
-<h1>タスク管理アプリ</h1>
+{% block title %} タスク一覧 {% endblock %}
+{% block content %}
     <div class="heading-wrapper">
     <h2>新規タスク作成</h2>
     </div>
@@ -128,5 +123,4 @@
         <button type="submit">日報一覧ページへ</button>
     </form>
 </div>
-</body>
-</html>
+{% endblock %}

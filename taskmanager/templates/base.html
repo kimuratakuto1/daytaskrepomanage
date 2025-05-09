@@ -9,22 +9,24 @@
 <body>
     <header class="app-header">
         <h1 class="app-title"><a href="/">Task管理アプリ</a></h1>
+        <nav class="app-nav">
+          {% if user.is_authenticated %}
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">ログアウト</button>
+          </form>
+          {% else %}
+            <a href="{% url 'login' %}">ログイン</a>
+            <a href="{% url 'signup' %}">サインアップ</a>
+          {% endif %}
+        </nav>
       </header>
 <br>
-<body>
-<h2>ログイン</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">ログイン</button>
-</form>
 
-<div class="signup-link-container">
-    <p class="text-center">
-      アカウントをお持ちでない方は
-      <a href="{% url 'signup' %}" class="signup-link">こちらから新規登録</a>
-    </p>
-  </div>  
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
   <footer class="app-footer">
     <p>&copy; 2025 タスク管理アプリ. All rights reserved.</p>
   </footer>

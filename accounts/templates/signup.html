@@ -2,12 +2,17 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>ユーザー登録</title>
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>{% block title %}タスク管理アプリ{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>ユーザー登録</h1>
+    <header class="app-header">
+        <h1 class="app-title"><a href="/">Task管理アプリ</a></h1>
+      </header>
+<br>
+<body>
+    <h2>ユーザー登録</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
