@@ -1,10 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Report List</title>
-</head>
+{% block title %} 日報リスト {% endblock %}
+{% block content %}
 <body>
     <h1>レポート一覧</h1>
     <h3>日付を選択して詳細を確認できます</h3>
@@ -28,11 +25,10 @@
       <div class="home-button-container">
         <a href="{% url 'task_list' %}" class="home-button">ホーム</a>
       </div>      
-</body>
-</html>
-<script>
-    function toggleDetail(id) {
-    const detail = document.getElementById(id);
-    detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
-    }
-  </script>
+      <script>
+        function toggleDetail(id) {
+        const detail = document.getElementById(id);
+        detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+        }
+      </script>
+{% endblock %}

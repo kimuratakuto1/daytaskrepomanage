@@ -1,9 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-<link href="{% static 'css/style.css' %}" rel="stylesheet">
-</head>
+{% block title %} 日報削除 {% endblock %}
+{% block content %}
 <body>
 <h2>本当に「{{ report.date }}」(タイトル：{{ report.title }} )を削除してもよろしいですか？</h2>
 <form method="post">
@@ -11,5 +9,4 @@
     <button type="submit">はい、削除します</button>
     <a href="{% url 'report_list' %}"><button type="button">キャンセル</button></a>
 </form>
-</body>
-</html>
+{% endblock %}
