@@ -123,4 +123,28 @@
         <button type="submit">日報一覧ページへ</button>
     </form>
 </div>
+
+
+
+<script>
+    // 完了ボタンが押されたときにスクロール位置を保持する
+    const completeButtons = document.querySelectorAll('form button[type="submit"]'); // タスク完了ボタンをすべて取得
+
+    completeButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            // ボタンが押された時のスクロール位置を取得
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        });
+    });
+
+    // ページが読み込まれたときにスクロール位置を戻す
+    window.addEventListener('load', function () {
+        const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+        if (savedScrollPosition) {
+            window.scrollTo(0, savedScrollPosition);
+        }
+    });
+</script>
+
+
 {% endblock %}
