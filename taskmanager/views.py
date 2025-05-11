@@ -23,15 +23,25 @@ def task_list(request):
         task_type   = request.POST.get("task_type")
         if title:
             if task_type == "daily":
-                TaskTemplate.objects.create(title=title, description=description, is_daily=True)
+                TaskTemplate.objects.create(
+                    title       = title,
+                    description = description, 
+                    is_daily    = True,
+                    user        = request.user
+                    )
             else:
-                Task.objects.create(title=title, description=description, date=date)
+                Task.objects.create(
+                    title       = title,
+                    description = description,
+                    date        = date,
+                    user        = request.user
+                    )
             return redirect('/')
     today = now().date()
-    incomplete_tasks = Task.objects.filter(is_done=False,date=today,template__isnull=True)
-    completed_today_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
-    template_tasks = TaskTemplate.objects.all()
-    future_tasks = Task.objects.filter(date__gt=timezone.now().date(), template__isnull=True).order_by('date')
+    incomplete_tasks = Task.objects.filter(is_done=False,date=today,template__isnull=True, user=request.user)
+    completed_today_tasks = Task.objects.filter(is_done=True, completed_at__date=today, user=request.user)
+    template_tasks = TaskTemplate.objects.filter(user=request.user)
+    future_tasks = Task.objects.filter(date__gt=timezone.now().date(), template__isnull=True, user=request.user).order_by('date')
     return render(request, 'task/task_list.html', {
         'incomplete_tasks'     : incomplete_tasks,
         'completed_today_tasks': completed_today_tasks,
@@ -42,6 +52,7 @@ def task_list(request):
 
 
 #タスク編集
+@login_required
 def task_edit(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     if request.method == 'POST':
@@ -54,6 +65,7 @@ def task_edit(request, task_id):
     return render(request, 'task/task_edit.html', {'task': task})
 
 #定型タスク編集
+@login_required
 def template_task_edit(request, task_id):
     task = get_object_or_404(TaskTemplate, pk=task_id)
     if request.method == 'POST':
@@ -65,8 +77,9 @@ def template_task_edit(request, task_id):
 
 
 #タスク消去
+@login_required
 def task_delete(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
+    task = get_object_or_404(Task, pk=task_id, user=request.user)
     if request.method == 'POST':
         task.delete()
         return redirect('/')
@@ -74,8 +87,9 @@ def task_delete(request, task_id):
     return render(request, 'task/task_delete.html', {'task': task})
 
 #定型タスク消去
+@login_required
 def template_task_delete(request, task_id):
-    task = get_object_or_404(TaskTemplate, pk=task_id)
+    task = get_object_or_404(TaskTemplate, pk=task_id, user=request.user)
     if request.method == 'POST':
         task.delete()
         return redirect('/')
@@ -84,8 +98,9 @@ def template_task_delete(request, task_id):
 
 
 #タスク完了
+@login_required
 def task_complete(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
+    task = get_object_or_404(Task, pk=task_id, user=request.user)
     if request.method == 'POST':
         task.is_done = True
         task.completed_at = timezone.now()
@@ -94,11 +109,12 @@ def task_complete(request, task_id):
 
 
 #業務開始
+@login_required
 def start_of_day(request):
     if request.method == 'POST':
         print("POST request received")
         today = timezone.now().date()
-        templates = TaskTemplate.objects.filter(is_daily=True)
+        templates = TaskTemplate.objects.filter(is_daily=True, user=request.user)
         
         if not templates:
             print("No daily templates found")
@@ -110,7 +126,8 @@ def start_of_day(request):
             existing_task = Task.objects.filter(
                 title       = template.title,
                 description = template.description,
-                date        = today
+                date        = today,
+                user        = request.user
             ).exists()
             
             if not existing_task:
@@ -118,7 +135,8 @@ def start_of_day(request):
                 Task.objects.create(
                     title       = template.title,
                     description = template.description,
-                    date        = today
+                    date        = today,
+                    user        = request.user
                 )
             else:
                 print(f"Task already exists for: {template.title}, {template.description}")
@@ -129,6 +147,7 @@ def start_of_day(request):
 
 
 # 業務終了
+@login_required
 def report_create(request):
     today = timezone.now().date()
     formatted_today = today.strftime("%Y年%m月%d日")
@@ -139,11 +158,11 @@ def report_create(request):
 
         #日報編集時のポスト(report_create.htmlから)
         if edited_report:
-            report = Report.objects.create(content=edited_report,date=today,title=title)
+            report = Report.objects.create(content=edited_report,date=today,title=title,user=request.user)
             return redirect('report_list')
         
         #日報生成時のポスト(task-list.htmlから)
-        completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today)
+        completed_tasks = Task.objects.filter(is_done=True, completed_at__date=today, user=request.user)
         if not completed_tasks.exists(): #例外処理
             return render(request, 'report/report_create.html', {'report': '本日は完了したタスクがありません。'})
 
@@ -171,21 +190,24 @@ def report_create(request):
     
         
 #日報リスト
+@login_required
 def report_list(request):
-    reports = Report.objects.all().order_by('date')
+    reports = Report.objects.filter(user=request.user).order_by('date')
     return render(request, 'report/report_list.html', {'reports': reports})
 
 #日報削除
+@login_required
 def report_delete(request, report_id):
-    report = get_object_or_404(Report, pk = report_id)
+    report = get_object_or_404(Report, pk = report_id, user=request.user)
     if request.method == 'POST':
         report.delete()
         return redirect('report_list')
     return render(request, 'report/report_delete.html',{'report': report})
 
 #日報編集
+@login_required
 def report_edit(request, report_id):
-    report = get_object_or_404(Report, pk=report_id)
+    report = get_object_or_404(Report, pk=report_id, user=request.user)
     if request.method == 'POST':
         title   = request.POST.get('title')
         content = request.POST.get('content')
