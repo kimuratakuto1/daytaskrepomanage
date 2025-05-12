@@ -14,7 +14,7 @@
     <label for="date">日付：</label>
     <input type="date" name="date" value="{{ report.date|date:'Y-m-d' }}" required><br>
     <label>詳細：</label><br>
-    <textarea name="content" required>{{ report.content }}</textarea>
+    <textarea name="content" required style="width: 100%; height: 300px;">{{ report.content }}</textarea>
     <button type="submit">保存</button>
 </form>
 {% endblock %}
