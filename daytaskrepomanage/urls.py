@@ -1,23 +1,32 @@
-"""
-URL configuration for taskmanager project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+
+# ↓↓↓ 追加部分（ここから）
+import os
+import django
+from django.core.management import call_command
+from django.db import OperationalError
+from django.contrib.auth.models import User
+
+django.setup()
+
+try:
+    # 自動でマイグレーションを実行
+    call_command('migrate', interactive=False)
+
+    # スーパーユーザーがまだ存在しなければ作成
+    username = os.getenv('DJANGO_SUPERUSER_USERNAME', 'admin')
+    email = os.getenv('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
+    password = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'yourpassword')
+
+    if not User.objects.filter(username=username).exists():
+        User.objects.create_superuser(username, email, password)
+        print("スーパーユーザーを作成しました。")
+except OperationalError as e:
+    print("マイグレーションまたはユーザー作成エラー:", e)
+# ↑↑↑ 追加部分（ここまで）
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,15 +36,3 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-
-from django.contrib.auth.models import User
-
-def create_admin_user():
-    username = 'kimuratakuto'
-    email = 'admin@example.com'
-    password = 'qaztaku6173'
-    if not User.objects.filter(username=username).exists():
-        User.objects.create_superuser(username, email, password)
-
-create_admin_user()
