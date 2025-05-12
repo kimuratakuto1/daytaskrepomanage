@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h-&nx)-g81j^fv@*i8a@!$a5o=q-xy3i&l#bipq59o09(fs1o^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://daytaskrepomanage.onrender.com', 'localhost']
 
 
 # Application definition
