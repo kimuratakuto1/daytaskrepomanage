@@ -27,3 +27,15 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+from django.contrib.auth.models import User
+
+def create_admin_user():
+    username = 'kimuratakuto'
+    email = 'admin@example.com'
+    password = 'qaztaku6173'
+    if not User.objects.filter(username=username).exists():
+        User.objects.create_superuser(username, email, password)
+
+create_admin_user()
