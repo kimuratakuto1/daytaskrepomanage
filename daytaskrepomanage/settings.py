@@ -57,10 +57,15 @@ WSGI_APPLICATION = 'daytaskrepomanage.wsgi.application'
 # データベース設定（例：PostgreSQL）
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'daytask_db',
+        'USER': 'kimuratakuto',
+        'PASSWORD': '',  # パスワードがあればここに記入
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 # パスワードバリデーション
 AUTH_PASSWORD_VALIDATORS = [
