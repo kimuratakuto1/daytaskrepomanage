@@ -4,6 +4,7 @@ asgiref==3.8.1
 certifi==2025.4.26
 charset-normalizer==3.4.1
 distro==1.9.0
+dj-database-url
 Django==5.2
 gunicorn==23.0.0
 h11==0.16.0
