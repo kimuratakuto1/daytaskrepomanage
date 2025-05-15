@@ -18,6 +18,7 @@ urlpatterns = [
     path('', include('taskmanager.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls')),
+    path('api/', include('mail.urls')), 
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

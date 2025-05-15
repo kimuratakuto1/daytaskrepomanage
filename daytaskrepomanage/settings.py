@@ -10,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # セキュリティ
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default_secret_key')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+print("DEBUG:", DEBUG)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
@@ -56,11 +57,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'daytaskrepomanage.wsgi.application'
 
 # データベース設定（例：PostgreSQL）
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
-}
+if DEBUG:
+    # ローカル開発環境：SQLiteを使用
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    # 本番環境：RenderのPostgreSQLを使用
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600)
+    }
 
 
 # パスワードバリデーション
@@ -101,3 +110,6 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 # ログイン後の遷移先
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
