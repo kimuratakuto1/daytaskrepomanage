@@ -10,7 +10,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # セキュリティ
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default_secret_key')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-print("DEBUG:", DEBUG)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
