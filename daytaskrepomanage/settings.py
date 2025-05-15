@@ -56,9 +56,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'daytaskrepomanage.wsgi.application'
 
 # データベース設定（例：PostgreSQL）
+USE_LOCAL_DB = os.getenv('USE_LOCAL_DB', 'False') == 'True'
+print("USE_LOCAL_DB:", USE_LOCAL_DB)
+print("DATABASE_URL env:", os.getenv('DATABASE_URL'))
+print("LOCAL_DATABASE_URL env:", os.getenv('LOCAL_DATABASE_URL'))
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
+        default=os.getenv('LOCAL_DATABASE_URL' if USE_LOCAL_DB else 'DATABASE_URL')
     )
 }
 
