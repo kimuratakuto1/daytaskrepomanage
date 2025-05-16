@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+from decouple import config
 
 load_dotenv()  # .envファイルの読み込み
 
@@ -101,3 +102,5 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 # ログイン後の遷移先
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+ALLOW_SIGNUP = config('ALLOW_SIGNUP', default=True, cast=bool)
