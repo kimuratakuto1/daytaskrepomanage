@@ -29,5 +29,4 @@ ENV/
 .DS_Store
 
 # Django static files (build artifacts)
-static/
 staticfiles/
